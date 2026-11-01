@@ -1,0 +1,34 @@
+<%- include('partials/head') %>
+<section class="intro">
+  <h1>ชั้นหนังสือของฉัน</h1>
+  <p class="lede"><%= total %> เล่มบนชั้น กดที่สันหนังสือเพื่อแก้ไขหรือบันทึกความเห็น</p>
+  <form class="search" method="get" action="/" role="search">
+    <label class="sr" for="q">ค้นหาชื่อหนังสือหรือผู้เขียน</label>
+    <input id="q" name="q" value="<%= q %>" placeholder="ค้นหาชื่อหนังสือหรือผู้เขียน">
+    <button class="btn btn-quiet" type="submit">ค้นหา</button>
+  </form>
+</section>
+
+<% shelves.forEach(shelf => { %>
+<section class="shelf-block" aria-labelledby="h-<%= shelf.key %>">
+  <h2 id="h-<%= shelf.key %>"><%= shelf.label %> <span class="count"><%= shelf.books.length %></span></h2>
+  <% if (shelf.books.length) { %>
+  <ul class="shelf">
+    <% shelf.books.forEach(b => { %>
+    <li>
+      <a class="spine" href="/books/<%= b.id %>/edit"
+         style="--h:<%= spineHeight(b.pages) %>px; --c:<%= spineColor(b.id) %>"
+         aria-label="<%= b.title %><%= b.author ? ' โดย ' + b.author : '' %><%= b.rating ? ' ให้ ' + b.rating + ' ดาว' : '' %>"
+         title="<%= b.title %>">
+        <span class="spine-title"><%= b.title %></span>
+        <% if (b.rating) { %><span class="spine-rating">★<%= b.rating %></span><% } %>
+      </a>
+    </li>
+    <% }) %>
+  </ul>
+  <% } else { %>
+  <p class="empty"><%= q ? 'ไม่พบหนังสือที่ตรงกับคำค้นในชั้นนี้' : 'ยังไม่มีหนังสือในชั้นนี้ — กด "เพิ่มหนังสือ" เพื่อเริ่มต้น' %></p>
+  <% } %>
+</section>
+<% }) %>
+<%- include('partials/foot') %>

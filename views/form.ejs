@@ -1,0 +1,59 @@
+<%- include('partials/head') %>
+<section class="form-page">
+  <h1><%= heading %></h1>
+  <form class="form" method="post" action="<%= action %>" novalidate>
+    <label>ชื่อหนังสือ
+      <input name="title" value="<%= book.title %>" maxlength="150" required autofocus>
+      <% if (errors.title) { %><span class="error"><%= errors.title %></span><% } %>
+    </label>
+
+    <label>ผู้เขียน
+      <input name="author" value="<%= book.author %>" maxlength="100">
+      <% if (errors.author) { %><span class="error"><%= errors.author %></span><% } %>
+    </label>
+
+    <div class="row">
+      <label>สถานะ
+        <select name="status">
+          <% Object.entries(STATUSES).forEach(([key, label]) => { %>
+          <option value="<%= key %>" <%= book.status === key ? 'selected' : '' %>><%= label %></option>
+          <% }) %>
+        </select>
+        <% if (errors.status) { %><span class="error"><%= errors.status %></span><% } %>
+      </label>
+
+      <label>จำนวนหน้า
+        <input name="pages" type="number" min="1" max="5000" value="<%= book.pages ?? '' %>">
+        <% if (errors.pages) { %><span class="error"><%= errors.pages %></span><% } %>
+      </label>
+
+      <label>คะแนน
+        <select name="rating">
+          <option value="0" <%= !book.rating ? 'selected' : '' %>>ยังไม่ให้</option>
+          <% for (let i = 1; i <= 5; i++) { %>
+          <option value="<%= i %>" <%= book.rating === i ? 'selected' : '' %>><%= i %> ดาว</option>
+          <% } %>
+        </select>
+        <% if (errors.rating) { %><span class="error"><%= errors.rating %></span><% } %>
+      </label>
+    </div>
+
+    <label>บันทึก
+      <textarea name="note" rows="5" maxlength="1000"><%= book.note %></textarea>
+      <% if (errors.note) { %><span class="error"><%= errors.note %></span><% } %>
+    </label>
+
+    <div class="actions">
+      <button class="btn" type="submit">บันทึก</button>
+      <a class="link" href="/">ยกเลิก</a>
+    </div>
+  </form>
+
+  <% if (book.id) { %>
+  <form class="danger" method="post" action="/books/<%= book.id %>?_method=DELETE"
+        onsubmit="return confirm('ลบหนังสือเล่มนี้ออกจากชั้น?')">
+    <button class="btn btn-danger" type="submit">ลบหนังสือเล่มนี้</button>
+  </form>
+  <% } %>
+</section>
+<%- include('partials/foot') %>

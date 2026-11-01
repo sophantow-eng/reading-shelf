@@ -1,13 +1,13 @@
-// เชื่อมต่อฐานข้อมูล SQLite และสร้างตารางถ้ายังไม่มี
-const Database = require('better-sqlite3');
+// SQLite via the built-in node:sqlite module (Node 22.13+), no native build needed
+const { DatabaseSync } = require('node:sqlite');
 const fs = require('fs');
 const path = require('path');
 
 const file = process.env.DB_PATH || path.join(__dirname, 'data', 'books.db');
 fs.mkdirSync(path.dirname(file), { recursive: true });
 
-const db = new Database(file);
-db.pragma('journal_mode = WAL');
+const db = new DatabaseSync(file);
+db.exec('PRAGMA journal_mode = WAL');
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS books (
